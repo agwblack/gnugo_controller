@@ -20,7 +20,7 @@ int main() {
     return 1;
   }
 
-  size = 10;
+  size = 128;
   char move[size];
   err = go_controller_genmove(BLACK, move, size, context);
   if (err != 0) {

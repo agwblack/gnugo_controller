@@ -7,7 +7,6 @@
 
 /* TODO:
  * Logging functions.
- * Error checking.
  */
 
 struct go_controller_context {
@@ -23,11 +22,22 @@ int go_controller_init() {
 go_controller_context* go_controller_launch_engine(const go_controller_setup* const setup) {
   int r_pipes[2];
   int w_pipes[2];
+  int err;
   pid_t pid;
-  go_controller_context* context = malloc(sizeof(go_controller_context));
+  go_controller_context* context = NULL;
 
-  pipe(r_pipes);
-  pipe(w_pipes);
+  err = pipe(r_pipes);
+  if (err != 0) {
+    printf("pipe() failed with error %i: %s\n", errno, strerror(errno));
+    return NULL;
+  }
+
+  err = pipe(w_pipes);
+  if (err != 0) {
+    printf("pipe() failed with error %i: %s\n", errno, strerror(errno));
+    return NULL;
+  }
+
   pid = fork();
 
   if (pid == 0) {
@@ -54,6 +64,7 @@ go_controller_context* go_controller_launch_engine(const go_controller_setup* co
   close(w_pipes[0]);
   close(r_pipes[1]);
 
+  context = malloc(sizeof(go_controller_context));
   context->input_handle = w_pipes[1];
   context->output_handle = r_pipes[0];
 
@@ -195,8 +206,10 @@ int get_response(char* command, char* response, size_t response_buf_size, go_con
       return 1;
     }
     else {
-      // TODO: Check response for errors and clean it up
-      response[rc] = '\0';
+      if (response[0] == '=' || response[0] == '?') {
+        strncpy(response, &response[2], strlen(response));
+      }
+      /*response[rc] = '\0'; TODO: Is it necessary to set this? */
 #ifdef DEBUG
       printf("read %zd bytes\n", rc);
       printf("Received response: %s\n", response);
