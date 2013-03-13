@@ -6,7 +6,15 @@
 #include <stdio.h>
 
 /* TODO:
+ *
  * Logging functions.
+ *
+ * We must always empty the pipe even when not interested in the response, for
+ * two reasons:
+ *  Check that there was no error
+ *  So we can accurately read the response of the next command we *are*
+ *  interested int
+ *
  */
 
 struct go_controller_context {
