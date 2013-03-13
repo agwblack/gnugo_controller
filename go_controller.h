@@ -20,6 +20,7 @@ typedef struct {
 } go_controller_setup;
 
 /* Opaque type which contains information pertaining to a particular game */
+struct go_controller_context;
 typedef struct go_controller_context go_controller_context;
 
 
@@ -32,16 +33,16 @@ typedef struct go_controller_context go_controller_context;
 int go_controller_init();
 
 /* Should be called once for each game gnugo is to manage. setup contains the
- * data that specifies what kind of game will be initialised. context will be
- * initialised appropriately, and should be passed to all other function calls
- * concerning this game */
-int go_controller_launch_engine(const go_controller_setup* const setup, go_controller_context* context);
+ * data that specifies what kind of game will be initialised. Returns a context
+ * which will be initialised appropriately, and should be passed to all other
+ * function calls concerning this game */
+go_controller_context* go_controller_launch_engine(const go_controller_setup* const setup);
 
 /* Generates a move for the given colour, given the specified context */
 int go_controller_genmove(go_controller_colour colour, char* move, size_t move_size, go_controller_context* context);
 
 /* Adds a move for the given colour to the specified context */
-int go_contoller_play(go_controller_colour colour, char* move, go_controller_context* context);
+int go_controller_play(go_controller_colour colour, char* move, go_controller_context* context);
 
 /* Removes the previous move from the specified context */
 int go_controller_undo(go_controller_context* context);

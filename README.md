@@ -10,3 +10,7 @@ Protocol (GTP).
 More information about GNUGo: http://www.gnu.org/software/gnugo/
 
 More information about GTP: http://www.lysator.liu.se/~gunnar/gtp/
+
+## Notes
+This library currently requires gnugo (or a symlink to it) to be in the working
+directory. Eventually, it will just require gnugo to be on the path.
