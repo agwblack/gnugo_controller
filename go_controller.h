@@ -47,6 +47,9 @@ int go_controller_play(go_controller_colour colour, char* move, go_controller_co
 /* Removes the previous move from the specified context */
 int go_controller_undo(go_controller_context* context);
 
+/* Removes the previous move from the specified context */
+int go_controller_set_board_size(int size, go_controller_context* context);
+
 /* Kills the gnugo engine for this context. context is set to NULL and should
  * not be used again, other than for a further call to
  * go_controller_launch_engine */

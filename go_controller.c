@@ -120,6 +120,24 @@ int go_controller_undo(go_controller_context* context) {
   return err;
 }
 
+int go_controller_set_board_size(int size, go_controller_context* context) {
+  const int min_size = 3;
+  const int max_size = 25;
+  const size_t buf_size = 128;
+  char cmd[buf_size];
+  int err;
+
+  if (size < 3 || size > 25) {
+    printf("Invalid size. Must be between %i and %i\n", min_size, max_size);
+    return 1;
+  }
+
+  sprintf(cmd, "boardsize %i", size);
+  err = send_command(cmd, context);
+
+  return err;
+}
+
 int go_controller_quit_engine(go_controller_context* context) {
   int err = send_command("quit", context);
   close(context->input_handle);
@@ -206,6 +224,9 @@ int get_response(char* command, char* response, size_t response_buf_size, go_con
       return 1;
     }
     else {
+      if (response[0] == '?') {
+        // TODO: We have an error: handle appropriately
+      }
       if (response[0] == '=' || response[0] == '?') {
         strncpy(response, &response[2], strlen(response));
       }
